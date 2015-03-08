@@ -18,18 +18,21 @@ TSL2561 tsl(TSL2561_ADDR_FLOAT);
 
 void setup(void) {
   Serial.begin(9600);
+  while (!Serial) ; 
+  Serial.println("Starting LSM");
   if (!lsm.begin())
   {
     Serial.println("Oops ... unable to initialize the LSM303. Check your wiring!");
     while (1);
   }
-  while (!Serial) ; 
+  Serial.println("Starting TSL");
   if (tsl.begin()) {
     Serial.println("Found sensor");
   } else {
     Serial.println("No sensor?");
     while (1);
   }
+  Serial.println("Starting main loop");
     
   // You can change the gain on the fly, to adapt to brighter/dimmer light situations
   //tsl.setGain(TSL2561_GAIN_0X);         // set no gain (for bright situtations)
