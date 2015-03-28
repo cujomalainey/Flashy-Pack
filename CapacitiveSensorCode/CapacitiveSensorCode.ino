@@ -37,6 +37,10 @@ void resetSignals(){
 void checkPads() {
   long leftTotal  =  cs_9_10.capacitiveSensor(30);
   long rightTotal =  cs_9_2.capacitiveSensor(30);
+  Serial.print("left: ");
+  Serial.print(leftTotal);
+  Serial.print("   Right: ");
+  Serial.println(rightTotal);
   if ((leftTotal > 30 && rightTotal > 30) || bothPadsHit) {
     if (!bothPadsHit) {
       padHoldTime = millis();
@@ -204,15 +208,9 @@ void setup()
   back.show();
   resetSignals();
 }
-int freeRam () 
-{
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
-}
+
 void loop()                    
 {
-  Serial.println(millis());
   checkPads();
   updateState();
   updateLedAnimations();
