@@ -16,6 +16,8 @@ class AnimationManager
   public:
     AnimationManager()
     {
+      this->front = Adafruit_NeoPixel(24, 1, NEO_GRB + NEO_KHZ800);
+      this->back = Adafruit_NeoPixel(40, 12, NEO_GRB + NEO_KHZ800);
       this->front.begin();
       this->back.begin();
       for (int i = 0; i < 40; i++){
@@ -27,6 +29,9 @@ class AnimationManager
       }
       this->front.show();
       this->back.show();
+      this->SignalLED = 0;
+      this->leftSignalDelay = 0;
+      this->rightSignalDelay = 0;
     };
     float brightness;
     void update()
@@ -99,11 +104,11 @@ class AnimationManager
     };
 
   private:
-    Adafruit_NeoPixel front = Adafruit_NeoPixel(24, 1, NEO_GRB + NEO_KHZ800);
-    Adafruit_NeoPixel back = Adafruit_NeoPixel(40, 12, NEO_GRB + NEO_KHZ800);
-    uint8_t SignalLED = 0; 
-    long leftSignalDelay = 0;
-    long rightSignalDelay = 0;
+    Adafruit_NeoPixel front;
+    Adafruit_NeoPixel back;
+    uint8_t SignalLED; 
+    long leftSignalDelay;
+    long rightSignalDelay;
 };
 
 class StateManager
@@ -328,15 +333,20 @@ class TouchManager
 };
 
 AnimationManager anim();
-
+StateManager statem(anim);
+SensorManager sensorm(statem, anim);
+TouchManager touchm(statem);
 
 void setup()                    
 {
-  
+  Serial.begin(9600);
 }
 
 void loop()                    
 {
-
+  anim.update();
+  statem.update();
+  sensorm.update();
+  touchm.update();
   delay(10);                             // arbitrary delay to limit data to serial port 
 }
